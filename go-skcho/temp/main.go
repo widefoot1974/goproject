@@ -13,6 +13,12 @@ func main() {
 	// ages["Mary"] = 24
 	// ages["Mary"] = 21 //overwrites 24
 
-	ages = map[srting]int{}
+	ages := map[string]int{
+		"widefoot": 51,
+	}
+
+	fmt.Printf("ages = %v\n", ages)
+	fmt.Printf("ages = %#v\n", ages)
+	fmt.Printf("ages = %T\n", ages)
 
 }
