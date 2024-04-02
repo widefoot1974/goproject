@@ -1,0 +1,25 @@
+package main
+
+import (
+	"fmt"
+)
+
+func concatter() func(string) string {
+	doc := ""
+	return func(word string) string {
+		doc += word + " "
+		return doc
+	}
+}
+
+func main() {
+
+	lines := concatter()
+	lines("hi")
+	lines("nice")
+	lines("to")
+	lines("meet")
+	lines("you")
+
+	fmt.Println(lines(""))
+}
