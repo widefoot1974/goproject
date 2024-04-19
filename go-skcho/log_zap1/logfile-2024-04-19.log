@@ -1,0 +1,4 @@
+[04-19 23:36:38.265] INFO  main.go:98 User Alice has logged in from IP 192.168.1.1 at 20230101
+[04-19 23:36:38.265] WARN  main.go:100 Payment of $123.45 has been processed for account 987654
+[04-19 23:36:38.265] DEBUG main.go:96 User = struct { Name string; Age int }{Name:"John", Age:51}
+[04-19 23:36:38.265] ERROR main.go:102 User = struct { Name string; Age int }{Name:"John", Age:51}

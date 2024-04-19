@@ -1,0 +1,3 @@
+time="2024-04-18 22:38:37.496" level=info msg="main() start" func=main.main file="/home/widefoot/goproject/go-skcho/log_test_logrus/main.go:35"
+time="2024-04-18 22:38:37.497" level=warning msg="task() start: id=12" func=main.task file="/home/widefoot/goproject/go-skcho/log_test_logrus/main.go:42"
+.go:42"
