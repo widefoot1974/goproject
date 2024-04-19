@@ -1,0 +1,5 @@
+{
+    "request-id": 16,
+    "action": "getCarrierSpaceUpdates",
+    "subs-actions": ["network-usage", "carrier-plans", "carrier-apps"]
+}
