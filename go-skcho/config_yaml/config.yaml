@@ -1,0 +1,22 @@
+# IOS Confiuration
+app: ios
+version: 1.0
+log_level:
+  - console: info
+    log_file: debug
+proc_conf:
+  max_msgid_num: 10000
+  nats_url: "localhost:4222" 
+  my_host: "IOS-G-0" 
+  eif_return_prefix: "-EIF"
+  aaac_return_prefix: "-AAAC"
+  cspc_return_prefix: "-CSPC"
+  eif_work_cnt: 4
+  aaac_work_cnt: 4
+  cspc_work_cnt: 4
+timer_conf:
+  eif_msg_timer: 15000
+  aaac_msg_timer: 3000
+  cspc_msg_timer: 3000
+ase_conf:
+  manage_account_url: "https://MultiSimSignManagedAccount.carrier.com"
