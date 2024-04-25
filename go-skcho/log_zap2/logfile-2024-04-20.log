@@ -1,4 +1,35 @@
-[04-20 00:46:12.591] INFO  main.go:126 User Alice has logged in from IP 192.168.1.1 at 20230101
-[04-20 00:46:12.591] WARN  main.go:128 Payment of $123.45 has been processed for account 987654
-[04-20 00:46:12.591] DEBUG main.go:124 User = struct { Name string; Age int }{Name:"John", Age:51}
-[04-20 00:46:12.591] ERROR main.go:130 User = struct { Name string; Age int }{Name:"John", Age:51}
+[2024-04-20 13:13:55.597] INFO  zap_log.go:97 User Alice has logged in from IP 192.168.1.1 at 20230101
+[2024-04-20 13:13:55.597] WARN  zap_log.go:97 Payment of $123.45 has been processed for account 987654
+[2024-04-20 13:13:55.597] DEBUG zap_log.go:97 User = struct { Name string; Age int }{Name:"John", Age:51}
+[2024-04-20 13:13:55.597] ERROR zap_log.go:97 User = struct { Name string; Age int }{Name:"John", Age:51}
+[2024-04-20 13:13:55.597] ERROR zap_log.go:97 User = struct { Name string; Age int }{Name:"John", Age:51}
+[2024-04-20 13:13:55.597] ERROR zap_log.go:97 User = struct { Name string; Age int }{Name:"John", Age:51}
+[2024-04-20 13:13:55.597] ERROR zap_log.go:97 User = struct { Name string; Age int }{Name:"John", Age:51}
+[2024-04-20 13:15:06.580] INFO  zap_log.go:97 User Alice has logged in from IP 192.168.1.1 at 20230101
+[2024-04-20 13:15:06.580] WARN  zap_log.go:97 Payment of $123.45 has been processed for account 987654
+[2024-04-20 13:15:35.804] INFO  zap_log.go:97 User Alice has logged in from IP 192.168.1.1 at 20230101
+[2024-04-20 13:15:35.804] WARN  zap_log.go:97 Payment of $123.45 has been processed for account 987654
+[2024-04-20 13:18:42.513] INFO  core.go:95 User Alice has logged in from IP 192.168.1.1 at 20230101
+[2024-04-20 13:18:42.513] WARN  core.go:95 Payment of $123.45 has been processed for account 987654
+[2024-04-20 13:18:58.201] INFO  zap_log.go:97 User Alice has logged in from IP 192.168.1.1 at 20230101
+[2024-04-20 13:18:58.201] WARN  zap_log.go:97 Payment of $123.45 has been processed for account 987654
+[2024-04-20 13:19:04.426] INFO  console_encoder.go:98 User Alice has logged in from IP 192.168.1.1 at 20230101
+[2024-04-20 13:19:04.426] WARN  console_encoder.go:98 Payment of $123.45 has been processed for account 987654
+[2024-04-20 13:19:09.376] INFO  core.go:95 User Alice has logged in from IP 192.168.1.1 at 20230101
+[2024-04-20 13:19:09.376] WARN  core.go:95 Payment of $123.45 has been processed for account 987654
+[2024-04-20 13:19:14.424] INFO  entry.go:253 User Alice has logged in from IP 192.168.1.1 at 20230101
+[2024-04-20 13:19:14.424] WARN  entry.go:253 Payment of $123.45 has been processed for account 987654
+[2024-04-20 13:19:19.528] INFO  logger.go:247 User Alice has logged in from IP 192.168.1.1 at 20230101
+[2024-04-20 13:19:19.528] WARN  logger.go:255 Payment of $123.45 has been processed for account 987654
+[2024-04-20 13:19:33.891] INFO  zap_log.go:132 User Alice has logged in from IP 192.168.1.1 at 20230101
+[2024-04-20 13:19:33.891] WARN  zap_log.go:134 Payment of $123.45 has been processed for account 987654
+[2024-04-20 13:19:42.542] INFO  zap_log.go:145 User Alice has logged in from IP 192.168.1.1 at 20230101
+[2024-04-20 13:19:42.542] WARN  zap_log.go:149 Payment of $123.45 has been processed for account 987654
+[2024-04-20 13:20:23.220] INFO  zap_log.go:97 User Alice has logged in from IP 192.168.1.1 at 20230101
+[2024-04-20 13:20:23.220] WARN  zap_log.go:97 Payment of $123.45 has been processed for account 987654
+[2024-04-20 13:20:44.642] INFO  zap_log.go:97 User Alice has logged in from IP 192.168.1.1 at 20230101
+[2024-04-20 13:20:44.642] WARN  zap_log.go:97 Payment of $123.45 has been processed for account 987654
+[2024-04-20 13:26:18.183] INFO  zap_log.go:97 User Alice has logged in from IP 192.168.1.1 at 20230101
+[2024-04-20 13:26:18.183] WARN  zap_log.go:97 Payment of $123.45 has been processed for account 987654
+[2024-04-20 13:27:03.131] INFO  main.go:10 User Alice has logged in from IP 192.168.1.1 at 20230101
+[2024-04-20 13:27:03.131] WARN  main.go:11 Payment of $123.45 has been processed for account 987654
