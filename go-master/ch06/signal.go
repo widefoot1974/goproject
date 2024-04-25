@@ -13,24 +13,22 @@ func handleSignal(sig os.Signal) {
 }
 
 func main() {
-	fmt.Printf("Process ID: %d\n", os.Getpid())
-	sigs := make(chan os.Signal, 1)
+	fmt.Printf("Process Id: %d\n", os.Getpid())
+	sigsCh := make(chan os.Signal, 1)
 
-	signal.Notify(sigs)
+	signal.Notify(sigsCh)
 
 	start := time.Now()
 	go func() {
 		for {
-			sig := <-sigs
+			sig := <-sigsCh
 			switch sig {
 			case syscall.SIGINT:
 				duration := time.Since(start)
-				fmt.Println("Execution time:", duration)
+				fmt.Println("Execute time:", duration)
 			case syscall.SIGUSR1:
 				handleSignal(sig)
-			case syscall.SIGKILL:
-				fmt.Println("Caught SIGKILL. Then Exit")
-				os.Exit(1)
+				os.Exit(0)
 			default:
 				fmt.Println("Caught:", sig)
 			}
