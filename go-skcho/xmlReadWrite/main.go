@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/xml"
 	"fmt"
+	"io"
 	"log"
 	"os"
 )
@@ -70,9 +71,28 @@ func main() {
 		log.Panic(err)
 	}
 
+	file, err = os.Open("person.xml")
+	if err != nil {
+		log.Panic(err)
+	}
+	defer file.Close()
+
+	xmlStr, err := io.ReadAll(file)
+	if err != nil {
+		log.Panic(err)
+	}
+	fmt.Printf("xmlStr = \n%v\n", xmlStr)
+	fmt.Printf("xmlStr = \n%v\n", string(xmlStr))
+
+	log.Printf("xmlStr Type is %T\n", xmlStr)
+	log.Printf("xmlStr size is %v", len(xmlStr))
+	log.Printf("xmlStr =\n%v\n", string(xmlStr))
+
 	// Print the new Person
+	fmt.Println("------------------------------")
 	fmt.Println("New Person:")
 	fmt.Println("Name", newPerson.Name)
 	fmt.Println("Age", newPerson.Age)
 	fmt.Println("Email", newPerson.Email)
+	fmt.Println("------------------------------")
 }
