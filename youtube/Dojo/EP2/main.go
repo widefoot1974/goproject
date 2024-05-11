@@ -1,23 +1,26 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"time"
 )
 
 func main() {
 	start := time.Now()
 	defer func() {
-		fmt.Println(time.Since(start))
+		log.Println(time.Since(start))
 	}()
 
+	signalCh := make(chan bool)
 	user := "Tommy"
-	go attack(user)
+	go attack(user, signalCh)
 
-	time.Sleep(time.Second * 2)
+	attackResult := <-signalCh
+	log.Printf("attackResult = %v\n", attackResult)
 }
 
-func attack(target string) {
-	fmt.Println("Throwing user stars at", target)
+func attack(target string, signalCh chan bool) {
+	log.Println("Throwing user stars at", target)
 	time.Sleep(time.Second * 1)
+	signalCh <- true
 }
