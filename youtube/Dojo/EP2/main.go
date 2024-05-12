@@ -6,6 +6,7 @@ import (
 )
 
 func main() {
+	log.SetFlags(log.Lmicroseconds)
 	start := time.Now()
 	defer func() {
 		log.Println(time.Since(start))
@@ -21,6 +22,6 @@ func main() {
 
 func attack(target string, signalCh chan bool) {
 	log.Println("Throwing user stars at", target)
-	time.Sleep(time.Second * 1)
+	time.Sleep(time.Second * 2)
 	signalCh <- true
 }

@@ -1,14 +1,15 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"time"
 )
 
 func main() {
+	log.SetFlags(log.Lmicroseconds)
 	start := time.Now()
 	defer func() {
-		fmt.Println(time.Since(start))
+		log.Println(time.Since(start))
 	}()
 
 	ch := make(chan string, 2)
@@ -19,8 +20,8 @@ func main() {
 	}(ch)
 	ch <- "Second message"
 
-	fmt.Println(<-ch)
-	// fmt.Println(<-ch)
-	// fmt.Println(<-ch)
+	log.Println(<-ch)
+	log.Println(<-ch)
+	log.Println(<-ch)
 	time.Sleep(time.Second * 2)
 }

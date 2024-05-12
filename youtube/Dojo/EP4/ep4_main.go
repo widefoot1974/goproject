@@ -2,14 +2,16 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"math/rand"
 	"time"
 )
 
 func main() {
+	log.SetFlags(log.Lmicroseconds)
 	start := time.Now()
 	defer func() {
-		fmt.Println(time.Since(start))
+		log.Println(time.Since(start))
 	}()
 
 	ch := make(chan string)
@@ -17,19 +19,16 @@ func main() {
 
 	go throwing(ch, numRounds)
 
-	// for message := range ch {
-	// 	fmt.Println(message)
-	// }
-
 	for {
 		message, open := <-ch
 		if !open {
+			log.Println("break")
 			break
 		}
-		fmt.Println(message)
+		log.Println(message)
 	}
 
-	fmt.Println("out of for loop")
+	log.Println("out of for loop")
 	time.Sleep(time.Second * 1)
 }
 
@@ -38,5 +37,5 @@ func throwing(ch chan string, numRounds int) {
 		score := rand.Intn(10)
 		ch <- fmt.Sprintf("Your score is %v", score)
 	}
-	// close(ch)
+	close(ch)
 }
