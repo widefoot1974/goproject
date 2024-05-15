@@ -1,0 +1,85 @@
+package main
+
+import (
+	"log"
+	"math/rand"
+	"sync"
+	"sync/atomic"
+	"time"
+)
+
+type ThreadData struct {
+	Mutex     sync.Mutex
+	Sum       int64 // 원자적 연산을 위해 int64 사용
+	Max       int
+	ItemCount int64 // 원자적 연산을 위해 int64 사용
+}
+
+func (td *ThreadData) Add(value int) {
+	// 합계와 개수는 원자적 연산을 사용하여 락 없이 업데이트
+	atomic.AddInt64(&td.Sum, int64(value))
+	atomic.AddInt64(&td.ItemCount, 1)
+
+	// 최대값만 락을 사용하여 업데이트
+	td.Mutex.Lock()
+	if value > td.Max {
+		td.Max = value
+	}
+	td.Mutex.Unlock()
+}
+
+var (
+	sharedData *ThreadData
+	wg         sync.WaitGroup
+)
+
+func init() {
+	sharedData = &ThreadData{}
+}
+
+func main() {
+	log.SetFlags(log.Lmicroseconds)
+	thrCnt := 5
+	for i := 0; i < thrCnt; i++ {
+		wg.Add(1)
+		go task()
+	}
+
+	// 매초 통계 계산
+	ticker := time.NewTicker(time.Second)
+	go func() {
+		for range ticker.C {
+			computeOverallStats()
+		}
+	}()
+
+	wg.Wait() // 모든 고루틴이 끝날 때까지 기다립니다.
+	ticker.Stop()
+	computeOverallStats() // 최종 계산
+}
+
+func task() {
+	defer wg.Done()
+	loopCnt := 100000
+	for i := 0; i < loopCnt; i++ {
+		time.Sleep(time.Millisecond * 5)
+		randNum := rand.Intn(1000)
+		sharedData.Add(randNum)
+	}
+}
+
+func computeOverallStats() {
+	sharedData.Mutex.Lock()
+	totalCount := atomic.LoadInt64(&sharedData.ItemCount)
+	overallSum := atomic.LoadInt64(&sharedData.Sum)
+	overallMax := sharedData.Max
+
+	// 값을 초기화합니다.
+	atomic.StoreInt64(&sharedData.Sum, 0)
+	atomic.StoreInt64(&sharedData.ItemCount, 0)
+	sharedData.Max = 0
+	sharedData.Mutex.Unlock()
+
+	average := float64(overallSum) / float64(totalCount)
+	log.Printf("Total Values Count: %d, Current Overall Average: %.2f, Current Overall Max: %d\n", totalCount, average, overallMax)
+}

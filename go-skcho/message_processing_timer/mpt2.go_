@@ -1,0 +1,93 @@
+package main
+
+import (
+	"log"
+	"math/rand"
+	"sync"
+	"time"
+)
+
+type ThreadData struct {
+	Values []int
+	Mutex  sync.Mutex
+}
+
+func (td *ThreadData) Add(value int) {
+	td.Mutex.Lock()
+	defer td.Mutex.Unlock()
+	td.Values = append(td.Values, value)
+}
+
+var (
+	taskData map[int]*ThreadData
+	wg       sync.WaitGroup
+)
+
+func init() {
+	taskData = make(map[int]*ThreadData)
+}
+
+func main() {
+	log.SetFlags(log.Lmicroseconds)
+	thrCnt := 5
+	for i := 0; i < thrCnt; i++ {
+		wg.Add(1)
+		taskData[i+1] = &ThreadData{}
+		go task(i + 1)
+	}
+
+	// 매초 통계 계산
+	ticker := time.NewTicker(time.Second)
+	go func() {
+		for range ticker.C {
+			computeOverallStats()
+		}
+	}()
+
+	wg.Wait() // 모든 고루틴이 끝날 때까지 기다립니다.
+	ticker.Stop()
+	computeOverallStats() // 최종 계산
+}
+
+func task(id int) {
+	defer wg.Done()
+	loopCnt := 100000
+	for i := 0; i < loopCnt; i++ {
+		time.Sleep(time.Millisecond * 5)
+		randNum := rand.Intn(1000)
+		taskData[id].Add(randNum)
+	}
+}
+
+func computeOverallStats() {
+	var allValues []int
+	var totalCount int
+	for _, data := range taskData {
+		data.Mutex.Lock()
+		allValues = append(allValues, data.Values...)
+		totalCount += len(data.Values) // 각 ThreadData의 개수를 추가합니다.
+
+		// 값 초기화
+		data.Values = []int{}
+
+		data.Mutex.Unlock()
+	}
+
+	average, max := computeStats(allValues)
+	log.Printf("Total Values Count: %d, Current Overall Average: %.2f, Current Overall Max: %d\n", totalCount, average, max)
+}
+
+func computeStats(numbers []int) (float64, int) {
+	if len(numbers) == 0 {
+		return 0.0, 0
+	}
+	var sum int
+	max := numbers[0]
+	for _, num := range numbers {
+		sum += num
+		if num > max {
+			max = num
+		}
+	}
+	return float64(sum) / float64(len(numbers)), max
+}
