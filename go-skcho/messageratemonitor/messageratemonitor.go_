@@ -1,0 +1,60 @@
+package messageratemonitor
+
+import (
+	"log"
+	"sync"
+	"sync/atomic"
+)
+
+type RateMonitor struct {
+	title string
+	data  *ThreadData
+}
+
+type ThreadData struct {
+	Mutex     sync.Mutex
+	Sum       int64
+	Max       int
+	ItemCount int64
+}
+
+func NewRateMonitor(title string) *RateMonitor {
+	return &RateMonitor{
+		title: string,
+		data:  &ThreadData{},
+	}
+}
+
+func (rm *RateMonitor) Add(value int) {
+	atomic.AddInt64(&rm.data.Sum, int64(value))
+	atomic.AddInt64(&rm.data.ItemCount, 1)
+
+	// Optimized max handling with atomic operations
+	for {
+		currentMax := atomic.LoadInt32(&rm.data.Max)
+		if int32(value) <= currentMax || atomic.CompareAndSwapInt32(&rm.data.Max, currentMax, int32(value)) {
+			break
+		}
+	}
+}
+
+func (rm *RateMonitor) reportAndReset() {
+	rm.data.Mutex.Lock()
+	defer rm.data.Mutex.Unlock()
+
+	sum := atomic.LoadInt64(&rm.data.Sum)
+	max := rm.data.Max
+	itemCount := atomic.LoadInt64(&rm.data.ItemCount)
+
+	average := 0.0
+	if itemCount > 0 {
+		average = float64(sum) / float64(itemCount)
+	}
+
+	log.Printf("Periodic Report - Average: %f, Max: %d, Total Items: %d\n", average, max, itemCount)
+
+	// Resetting values under the same mutex lock
+	atomic.StoreInt64(&rm.data.Sum, 0)
+	atomic.StoreInt64(&rm.data.ItemCount, 0)
+	rm.data.Max = 0
+}
