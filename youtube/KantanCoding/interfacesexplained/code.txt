@@ -1,0 +1,1 @@
+https://github.com/kantancoding/interface_example_go
