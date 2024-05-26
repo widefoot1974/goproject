@@ -4,23 +4,23 @@ import (
 	"image"
 	"image/color"
 	"image/jpeg"
+	"log"
 	"os"
 
-	"github.com/labstack/gommon/log"
 	"github.com/nfnt/resize"
 )
 
 func ReadImage(path string) image.Image {
 	inputFile, err := os.Open(path)
 	if err != nil {
-		log.Panicf("os.Open(%v) Failed: %v\n", path, err)
+		log.Printf("os.Open(%v) Failed: %v\n", path, err)
 	}
 	defer inputFile.Close()
 
 	// Decode the image
 	img, _, err := image.Decode(inputFile)
 	if err != nil {
-		log.Panicf("image.Decode(%v) Failed: %v\n", path, err)
+		log.Printf("image.Decode(%v) Failed: %v\n", path, err)
 	}
 
 	return img
@@ -29,14 +29,14 @@ func ReadImage(path string) image.Image {
 func WriteImage(path string, img image.Image) {
 	outputFile, err := os.Create(path)
 	if err != nil {
-		log.Panicf("os.Create(%v) Failed: %v\n", path, err)
+		log.Printf("os.Create(%v) Failed: %v\n", path, err)
 	}
 	defer outputFile.Close()
 
 	// Encode the image to the new file
 	err = jpeg.Encode(outputFile, img, nil)
 	if err != nil {
-		log.Panicf("jpeg.Encode(%v) Failed: %v\n", path, err)
+		log.Printf("jpeg.Encode(%v) Failed: %v\n", path, err)
 	}
 }
 
