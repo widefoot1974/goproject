@@ -2,7 +2,7 @@ syntax = "proto3";
 option go_package = "./protoapi";
 
 service Random {
-    rpc GetData (RequestDataTime) returns (DateTime);
+    rpc GetDate (RequestDateTime) returns (DateTime);
     rpc GetRandom (RandomParams) returns (RandomInt);
     rpc GetRandomPass (RequestPass) returns (RandomPass);
 }
@@ -22,7 +22,7 @@ message DateTime {
     string Value = 1;
 }
 
-message RequestDataTime {
+message RequestDateTime {
     string Value = 2;
 }
 

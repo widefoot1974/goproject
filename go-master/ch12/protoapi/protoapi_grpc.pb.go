@@ -19,7 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion8
 
 const (
-	Random_GetData_FullMethodName       = "/Random/GetData"
+	Random_GetDate_FullMethodName       = "/Random/GetDate"
 	Random_GetRandom_FullMethodName     = "/Random/GetRandom"
 	Random_GetRandomPass_FullMethodName = "/Random/GetRandomPass"
 )
@@ -28,7 +28,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type RandomClient interface {
-	GetData(ctx context.Context, in *RequestDataTime, opts ...grpc.CallOption) (*DateTime, error)
+	GetDate(ctx context.Context, in *RequestDateTime, opts ...grpc.CallOption) (*DateTime, error)
 	GetRandom(ctx context.Context, in *RandomParams, opts ...grpc.CallOption) (*RandomInt, error)
 	GetRandomPass(ctx context.Context, in *RequestPass, opts ...grpc.CallOption) (*RandomPass, error)
 }
@@ -41,10 +41,10 @@ func NewRandomClient(cc grpc.ClientConnInterface) RandomClient {
 	return &randomClient{cc}
 }
 
-func (c *randomClient) GetData(ctx context.Context, in *RequestDataTime, opts ...grpc.CallOption) (*DateTime, error) {
+func (c *randomClient) GetDate(ctx context.Context, in *RequestDateTime, opts ...grpc.CallOption) (*DateTime, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(DateTime)
-	err := c.cc.Invoke(ctx, Random_GetData_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, Random_GetDate_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -75,7 +75,7 @@ func (c *randomClient) GetRandomPass(ctx context.Context, in *RequestPass, opts 
 // All implementations must embed UnimplementedRandomServer
 // for forward compatibility
 type RandomServer interface {
-	GetData(context.Context, *RequestDataTime) (*DateTime, error)
+	GetDate(context.Context, *RequestDateTime) (*DateTime, error)
 	GetRandom(context.Context, *RandomParams) (*RandomInt, error)
 	GetRandomPass(context.Context, *RequestPass) (*RandomPass, error)
 	mustEmbedUnimplementedRandomServer()
@@ -85,8 +85,8 @@ type RandomServer interface {
 type UnimplementedRandomServer struct {
 }
 
-func (UnimplementedRandomServer) GetData(context.Context, *RequestDataTime) (*DateTime, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetData not implemented")
+func (UnimplementedRandomServer) GetDate(context.Context, *RequestDateTime) (*DateTime, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDate not implemented")
 }
 func (UnimplementedRandomServer) GetRandom(context.Context, *RandomParams) (*RandomInt, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetRandom not implemented")
@@ -107,20 +107,20 @@ func RegisterRandomServer(s grpc.ServiceRegistrar, srv RandomServer) {
 	s.RegisterService(&Random_ServiceDesc, srv)
 }
 
-func _Random_GetData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RequestDataTime)
+func _Random_GetDate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RequestDateTime)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(RandomServer).GetData(ctx, in)
+		return srv.(RandomServer).GetDate(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Random_GetData_FullMethodName,
+		FullMethod: Random_GetDate_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RandomServer).GetData(ctx, req.(*RequestDataTime))
+		return srv.(RandomServer).GetDate(ctx, req.(*RequestDateTime))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -169,8 +169,8 @@ var Random_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*RandomServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetData",
-			Handler:    _Random_GetData_Handler,
+			MethodName: "GetDate",
+			Handler:    _Random_GetDate_Handler,
 		},
 		{
 			MethodName: "GetRandom",
