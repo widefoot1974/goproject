@@ -1,0 +1,62 @@
+package main
+
+import "fmt"
+
+// PaymentProcessor defines the behavior fot ptocessing payments
+type PaymentProcessor interface {
+	ProcessPayment(amount float64) string
+}
+
+// CreditCard struct
+type CreditCard struct {
+	CardNumber string
+}
+
+// ProcessPayment method for CreditCard
+func (cc CreditCard) ProcessPayment(amount float64) string {
+	return fmt.Sprintf(
+		"Processed payment of $%.2f using Credit Card %s",
+		amount,
+		cc.CardNumber)
+}
+
+// PayPal struct
+type PayPal struct {
+	Email string
+}
+
+// ProcessPayment method for PayPal
+func (pp PayPal) ProcessPayment(amount float64) string {
+	return fmt.Sprintf(
+		"Processed payment of $%.2f using PayPal account %s",
+		amount,
+		pp.Email)
+}
+
+// BankTransfer struct
+type BankTransfer struct {
+	AccountNumber string
+}
+
+// ProcessPayment method for BankTransfer
+func (bt BankTransfer) ProcessPayment(amount float64) string {
+	return fmt.Sprintf(
+		"Processed payment of $%.2f using Bank Transfer %s",
+		amount,
+		bt.AccountNumber)
+}
+
+// Process function uses the PaymentProcessor interfece
+func process(payment PaymentProcessor, amount float64) {
+	fmt.Println(payment.ProcessPayment(amount))
+}
+
+func main() {
+	cc := CreditCard{CardNumber: "9411-8109-5678-1234"}
+	pp := PayPal{Email: "widefoot1974@naver.com"}
+	bt := BankTransfer{AccountNumber: "59191056781234"}
+
+	process(cc, 100.95)
+	process(pp, 170.75)
+	process(bt, 250.50)
+}
