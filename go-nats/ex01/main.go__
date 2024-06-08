@@ -1,0 +1,118 @@
+package main
+
+import (
+	"context"
+	"log"
+	"os"
+	"time"
+
+	"github.com/nats-io/nats.go"
+	"github.com/nats-io/nats.go/jetstream"
+)
+
+func main() {
+	log.SetFlags(log.Lmicroseconds | log.Lshortfile)
+
+	url := os.Getenv("NATS_URL")
+	if url == "" {
+		log.Printf("\"NATS_URL\" config is empty")
+		url = nats.DefaultURL
+	}
+	log.Printf("url = [%v]\n", url)
+
+	nc, err := nats.Connect(url)
+	if err != nil {
+		log.Fatalf("nats.Connect(%v) fail: %v\n", url, err)
+	}
+	defer nc.Drain()
+	log.Printf("nats.Connect(%v) Succ\n", url)
+
+	js, err := jetstream.New(nc)
+	if err != nil {
+		log.Fatalf("jetstream.New() fail: %v\n", err)
+	}
+	log.Printf("nc.JetStream() Succ\n")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	kv, _ := js.CreateKeyValue(ctx, jetstream.KeyValueConfig{
+		Bucket: "profiles",
+	})
+	if err != nil {
+		log.Fatalf("js.CreateKeyValue() fail: %v\n", err)
+	}
+
+	w, err := kv.Watch(ctx, "sue.*")
+	if err != nil {
+		log.Fatalf("kv.Watch failed: %v\n", err)
+	}
+	if w == nil {
+		log.Fatalf("Watcher is nil\n")
+	}
+
+	go func(w jetstream.KeyWatcher) {
+		for kve := range w.Updates() {
+			if kve == nil {
+				log.Println("[Watcher] Received nil kve from the watcher")
+				continue
+			}
+			log.Printf("[Watcher] %s @ %d -> %q (op: %s)\n", kve.Key(), kve.Revision(), string(kve.Value()), kve.Operation())
+		}
+		log.Println("[Watcher] Watcher channel closed")
+	}(w)
+
+	time.Sleep(time.Second * 3)
+
+	log.Printf("sue.color --> blue\n")
+	kv.Put(ctx, "sue.color", []byte("blue"))
+	if err != nil {
+		log.Fatalf("kv.Put(): %v\n", err)
+	}
+	entry, _ := kv.Get(ctx, "sue.color")
+	if err != nil {
+		log.Fatalf("kv.Get(): %v\n", err)
+	}
+	if entry != nil {
+		log.Printf("%s @ %d -> %q\n", entry.Key(), entry.Revision(), string(entry.Value()))
+	} else {
+		log.Printf("entry is nil\n")
+	}
+
+	time.Sleep(time.Second * 3)
+
+	log.Printf("sue.color --> green\n")
+	kv.Put(ctx, "sue.color", []byte("green"))
+	if err != nil {
+		log.Fatalf("kv.Put(): %v\n", err)
+	}
+	entry, _ = kv.Get(ctx, "sue.color")
+	if err != nil {
+		log.Fatalf("kv.Get(): %v\n", err)
+	}
+	if entry != nil {
+		log.Printf("%s @ %d -> %q\n", entry.Key(), entry.Revision(), string(entry.Value()))
+	} else {
+		log.Printf("entry is nil\n")
+	}
+
+	time.Sleep(time.Second * 3)
+
+	log.Printf("sue.color --> red\n")
+	kv.Put(ctx, "sue.color", []byte("red"))
+	if err != nil {
+		log.Fatalf("kv.Put(): %v\n", err)
+	}
+	entry, _ = kv.Get(ctx, "sue.color")
+	if err != nil {
+		log.Fatalf("kv.Get(): %v\n", err)
+	}
+	if entry != nil {
+		log.Printf("%s @ %d -> %q\n", entry.Key(), entry.Revision(), string(entry.Value()))
+	} else {
+		log.Printf("entry is nil\n")
+	}
+
+	time.Sleep(time.Second * 6)
+	log.Printf("process completed.\n")
+}
